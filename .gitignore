@@ -1,0 +1,15 @@
+# Ignore data folder
+src/data/
+
+# macOS hidden files
+.DS_Store
+
+# VS Code settings folder
+.vscode/
+
+# Python cache folders (if using Python)
+__pycache__/
+*.pyc
+
+# System files
+Thumbs.db
