@@ -13,3 +13,7 @@ __pycache__/
 
 # System files
 Thumbs.db
+
+# Virtual environment
+venv/
+.venv/
