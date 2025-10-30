@@ -1,10 +1,8 @@
 # MLDS 400 — HW3: Titanic Survival Prediction
 
-This repository provides a reproducible environment (Python and R) to load the Titanic dataset, explore/adjust features, train a simple model, and print results. It is designed so a user can clone, read this README, and run the code in a few simple steps.
+This repository provides reproducible Python and R Docker environments to explore the Titanic dataset, perform data cleaning, train a logistic regression model, show the model accuracy, and save predictions on the test set to a CSV file.
 
 Important notes
-- Do not commit the dataset. This repo shows how to download it locally.
-- All commands below are run from the repository root (the same folder as this README).
 - You only need Docker to run the project; Python/R installations on the host are optional.
 
 ## Repository structure
@@ -34,13 +32,16 @@ You can obtain the Titanic dataset from Kaggle ([Titanic: Machine Learning from 
 1. Download train.csv and test.csv.
 2. Create the folder if it doesn’t exist: src/data/
 3. Move both files into src/data/  
-Final layout expected:  
+4. Final layout expected:
+```bash
 src/data/train.csv  
 src/data/test.csv  
+```
+Do NOT upload the dataset to GitHub. The ```.gitignore``` file already excludes it.
 
 
 ## Run with Docker — Python implementation
-The Python container reads src/data/train.csv and src/data/test.csv, prints dataset information, handles minimal cleaning, trains a logistic regression, reports training accuracy, and prints test predictions (accuracy is skipped since the official test set lacks the Survived column).
+The Python container reads src/data/train.csv and src/data/test.csv, prints dataset information, handles data cleaning, trains a logistic regression, reports training accuracy, and writes predictions for the test set to a CSV file (```predictions_python.csv```).
 
 1) Build the Python image  
 ```docker build -t titanic-python:latest -f src/python_app/Dockerfile src/python_app```  
@@ -58,12 +59,11 @@ Expected console output (abbreviated)
 - "Building Logistic Regression model"
 - "Training set accuracy: …"
 - "Loaded test dataset." and missing values for test
-- "Predicting survivability on test set…"
-- If Survived not present in test: a note that test accuracy is not computed, plus a preview of predictions
+- Predictions saved to: ```src/data/predictions_python.csv```
 
 
 ## Run with Docker — R implementation
-The R container mirrors the same flow: loads train.csv, prints structure/summary, cleans a few fields, fits a logistic regression via glm (binomial), reports training accuracy, loads test.csv, and prints test predictions (and test accuracy only if a Survived column exists).
+The R container mirrors the same flow: loads train.csv, prints structure/summary, cleans a few fields, fits a logistic regression via glm (binomial), reports training accuracy, loads test.csv, and saves test predictions to predictions_r.csv.
 
 1) Build the R image  
 ```docker build -t titanic-r:latest -f src/r_app/Dockerfile src/r_app```  
@@ -81,7 +81,7 @@ Expected console output (abbreviated)
 - Coefficient table from glm
 - "Training set accuracy: …"
 - "Loaded test dataset." and missing values
-- "Predicting survivability on test set…"
+- Predictions saved to: ```src/data/predictions_r.csv```
 
 
 ## What each script does
@@ -92,7 +92,7 @@ Expected console output (abbreviated)
     - Trains LogisticRegression on: Pclass, Sex, Age, SibSp, Parch, Fare
     - Prints training accuracy
     - Loads test.csv, fills Age and Fare if needed, encodes Sex
-    - Predicts and prints first predictions; skips test accuracy if labels not present
+    - Predicts and saves predictions
 - R: src/r_app/main.R
     - Same logic with glm(family = binomial), prints coefficients and training accuracy
-    - Predicts on test set; prints a note if no Survived column exists
+    - Predicts on test set and saves the results
