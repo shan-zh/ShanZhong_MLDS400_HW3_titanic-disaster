@@ -8,7 +8,7 @@ Important notes
 - You only need Docker to run the project; Python/R installations on the host are optional.
 
 ## Repository structure
-.
+```bash
 ├─ README.md
 ├─ src/
 │  ├─ data/
@@ -21,7 +21,7 @@ Important notes
 │     ├─ install_packages.R
 │     └─ main.R
 └─ .gitignore
-
+```
 
 
 ## Prerequisites
