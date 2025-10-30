@@ -8,19 +8,19 @@ Important notes
 - You only need Docker to run the project; Python/R installations on the host are optional.
 
 ## Repository structure
-.
-├── README.md
-├── src/
-│   ├── data/                 # place train.csv and test.csv here (not committed)
-│   ├── python_app/
-│   │   ├── Dockerfile        # Python container
-│   │   ├── requirements.txt
-│   │   └── main.py
-│   └── r_app/
-│       ├── Dockerfile        # R container
-│       ├── install_packages.R
-│       └── main.R
-└── .gitignore                # ignores src/data/, venv/, caches, etc.
+.  
+├── README.md  
+├── src/  
+│   ├── data/                 # place train.csv and test.csv here (not committed)  
+│   ├── python_app/  
+│   │   ├── Dockerfile        # Python container  
+│   │   ├── requirements.txt  
+│   │   └── main.py  
+│   └── r_app/  
+│       ├── Dockerfile        # R container  
+│       ├── install_packages.R  
+│       └── main.R  
+└── .gitignore                # ignores src/data/, venv/, caches, etc.  
 
 
 ## Prerequisites
@@ -32,22 +32,22 @@ Important notes
 You can obtain the Titanic dataset from Kaggle ([Titanic: Machine Learning from Disaster](https://www.kaggle.com/competitions/titanic/code)).
 1. Download train.csv and test.csv.
 2. Create the folder if it doesn’t exist: src/data/
-3. Move both files into src/data/
-Final layout expected:
-src/data/train.csv
-src/data/test.csv
+3. Move both files into src/data/  
+Final layout expected:  
+src/data/train.csv  
+src/data/test.csv  
 
 
 ## Run with Docker — Python implementation
 The Python container reads src/data/train.csv and src/data/test.csv, prints dataset information, handles minimal cleaning, trains a logistic regression, reports training accuracy, and prints test predictions (accuracy is skipped since the official test set lacks the Survived column).
 
-1) Build the Python image
-```docker build -t titanic-python:latest -f src/python_app/Dockerfile src/python_app```
-2) Run the Python container (mount data folder)
-macOS/Linux
-```docker run --rm -v "$(pwd)/src/data:/app/src/data" titanic-python:latest```
-Windows PowerShell
-```docker run --rm -v "${PWD}\src\data:/app/src/data" titanic-python:latest```
+1) Build the Python image  
+```docker build -t titanic-python:latest -f src/python_app/Dockerfile src/python_app```  
+2) Run the Python container (mount data folder)  
+macOS/Linux  
+```docker run --rm -v "$(pwd)/src/data:/app/src/data" titanic-python:latest```  
+Windows PowerShell  
+```docker run --rm -v "${PWD}\src\data:/app/src/data" titanic-python:latest```  
 
 Expected console output (abbreviated)
 - "Loaded training dataset."
@@ -64,13 +64,13 @@ Expected console output (abbreviated)
 ## Run with Docker — R implementation
 The R container mirrors the same flow: loads train.csv, prints structure/summary, cleans a few fields, fits a logistic regression via glm (binomial), reports training accuracy, loads test.csv, and prints test predictions (and test accuracy only if a Survived column exists).
 
-1) Build the R image
-```docker build -t titanic-r:latest -f src/r_app/Dockerfile src/r_app```
-2) Run the R container (mount data folder)
-macOS/Linux
-```docker run --rm -v "$(pwd)/src/data:/app/src/data" titanic-r:latest```
-Windows PowerShell
-```docker run --rm -v "${PWD}\src\data:/app/src/data" titanic-r:latest```
+1) Build the R image  
+```docker build -t titanic-r:latest -f src/r_app/Dockerfile src/r_app```  
+2) Run the R container (mount data folder)  
+macOS/Linux  
+```docker run --rm -v "$(pwd)/src/data:/app/src/data" titanic-r:latest```  
+Windows PowerShell  
+```docker run --rm -v "${PWD}\src\data:/app/src/data" titanic-r:latest```  
 
 Expected console output (abbreviated)
 - Loaded training dataset.
