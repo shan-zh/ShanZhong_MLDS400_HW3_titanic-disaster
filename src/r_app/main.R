@@ -83,13 +83,11 @@ test_prob <- predict(model, newdata = X_test, type = "response")
 test_pred <- ifelse(test_prob >= 0.5, 1L, 0L)
 cat("Predictions complete.\n")
 
-# If Survived exists, report accuracy; otherwise, print a note
-if ("Survived" %in% names(test_df)) {
-  test_acc <- mean(test_pred == test_df$Survived, na.rm = TRUE)
-  cat(sprintf("Test set accuracy: %.4f\n", test_acc))
-} else {
-  cat("Note: 'Survived' column not found in test.csv; accuracy cannot be computed on the official test file.\n")
-  cat("First 10 predictions (0=did not survive, 1=survived):\n")
-  print(head(test_pred, 10))
-}
+# Save the results
+output <- tibble(
+  PassengerId = test_df$PassengerId,
+  Survived = test_pred
+)
+write_csv(output, "src/data/predictions_r.csv")
+cat("\nPredictions saved to src/data/predictions_r.csv\n")
 

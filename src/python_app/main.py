@@ -78,13 +78,15 @@ def main():
     test_preds = model.predict(X_test)
     print("Predictions complete.")
 
-    # If test.csv contains 'Survived' column (for checking accuracy)
-    if "Survived" in test_df.columns:
-        y_test = test_df["Survived"]
-        test_acc = accuracy_score(y_test, test_preds)
-        print(f"Test set accuracy: {test_acc:.4f}")
-    else:
-        print("No 'Survived' column in test.csv, skipping test accuracy calculation.")
+    output = pd.DataFrame({
+    "PassengerId": test_df["PassengerId"],
+    "Survived": test_preds
+    })
+
+    # Save the results
+    output_path = "src/data/predictions_python.csv"
+    output.to_csv(output_path, index=False)
+    print(f"\nPredictions saved to {output_path}")
 
 
 if __name__ == "__main__":
