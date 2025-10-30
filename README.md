@@ -8,19 +8,20 @@ Important notes
 - You only need Docker to run the project; Python/R installations on the host are optional.
 
 ## Repository structure
-.  
-├── README.md  
-├── src/  
-│   ├── data/                 # place train.csv and test.csv here (not committed)  
-│   ├── python_app/  
-│   │   ├── Dockerfile        # Python container  
-│   │   ├── requirements.txt  
-│   │   └── main.py  
-│   └── r_app/  
-│       ├── Dockerfile        # R container  
-│       ├── install_packages.R  
-│       └── main.R  
-└── .gitignore                # ignores src/data/, venv/, caches, etc.  
+.
+├─ README.md
+├─ src/
+│  ├─ data/
+│  ├─ python_app/
+│  │  ├─ Dockerfile
+│  │  ├─ requirements.txt
+│  │  └─ main.py
+│  └─ r_app/
+│     ├─ Dockerfile
+│     ├─ install_packages.R
+│     └─ main.R
+└─ .gitignore
+
 
 
 ## Prerequisites
