@@ -63,7 +63,7 @@ The Python container runs ```src/python_app/main.py```, which:
 - Cleans the test set (fills missing ```Age``` and ```Fare```, encodes ```Sex```).
 Predicts survivability and saves the output file: ```src/data/predictions_python.csv```
 
-Expected Output (abbreviated):
+**Expected Output (abbreviated):**
 ```
 Loaded training dataset.
 
@@ -124,15 +124,14 @@ Windows PowerShell
 The R container runs ```src/r_app/main.R```, which:
 - Loads and prints dataset structure, summary statistics, and missing-value counts.
 - Fills missing ```Age``` values with the median, showing how many were filled.
-- Converts ```Sex``` to numeric (```male = 0```, ```female = 1```) and confirms unique values.
+- Converts ```Sex``` to numeric (```male = 0```, ```female = 1```).
 - Trains a logistic regression model using:
 ```glm(Survived ~ Pclass + Sex + Age + SibSp + Parch + Fare, family = binomial)```
 - Prints model coefficients and training accuracy.
 - Cleans the test set (```Age```, ```Fare```, and ```Sex```), prints before/after missing counts.
 - Predicts survivability and saves: ```src/data/predictions_r.csv```
 
-
-Expected Output (abbreviated):
+**Expected Output (abbreviated):**
 ```
 Attaching package: ‘dplyr’
 ...
