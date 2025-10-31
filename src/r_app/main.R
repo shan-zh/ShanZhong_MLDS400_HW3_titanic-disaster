@@ -13,36 +13,36 @@ if (!file.exists(train_path)) {
 }
 
 df <- read_csv(train_path, show_col_types = FALSE)
-cat("Loaded training dataset.\n\n")
+cat("Loaded training dataset.\n")
 
 # 2) Basic exploration
-cat("Basic structure:\n")
+cat("\nBasic structure:\n")
 print(str(df))
 cat("\nSummary statistics (numeric columns):\n")
 print(summary(df))
-cat("\nMissing values per column:\n")
-print(colSums(is.na(df)))
 
 # 3) Cleaning 
+cat("\nMissing values per column before cleaning:\n")
+print(colSums(is.na(df)))
+
 # Fill Age with median
+age_missing_before <- sum(is.na(df$Age))
 age_med <- median(df$Age, na.rm = TRUE)
 df$Age[is.na(df$Age)] <- age_med
+cat(sprintf("\nFilled %d missing Age values with median (%.2f).\n", age_missing_before, age_med))
 
-# Fill Embarked with mode
-emb_mode <- names(which.max(table(df$Embarked)))
-df$Embarked[is.na(df$Embarked)] <- emb_mode
+cat("\nMissing values per column after cleaning:\n")
+print(colSums(is.na(df)))
 
 # Convert Sex to numeric: male = 0, female = 1
+cat("\nConverting 'Sex' column to numeric (male = 0, female = 1)\n")
 df$Sex <- ifelse(df$Sex == "male", 0L, 1L)
-
-cat("\nPreview of adjusted columns:\n")
-print(head(df[, c("Survived","Pclass","Sex","Age","SibSp","Parch","Fare")]))
 
 # 4) Train logistic regression (glm with binomial)
 features <- c("Pclass","Sex","Age","SibSp","Parch","Fare")
 formula <- as.formula("Survived ~ Pclass + Sex + Age + SibSp + Parch + Fare")
 
-cat("\nTraining logistic regression (glm, binomial)...\n")
+cat("\nTraining logistic regression (glm, binomial).\n")
 model <- glm(formula, data = df, family = binomial())
 
 cat("Model training complete.\n")
@@ -64,21 +64,32 @@ if (!file.exists(test_path)) {
 
 test_df <- read_csv(test_path, show_col_types = FALSE)
 cat("\nLoaded test dataset.\n")
-cat("Missing values per column in test set:\n")
+cat("\nMissing values per column in test set before cleaning:\n")
 print(colSums(is.na(test_df)))
 
-# Match the same minimal cleaning as training
+# Fill missing values using training medians
+test_age_missing_before <- sum(is.na(test_df$Age))
 test_df$Age[is.na(test_df$Age)]  <- age_med
+cat(sprintf("\nFilled %d missing Age values in test set with training median (%.2f).", test_age_missing_before, age_med))
+
 if ("Fare" %in% names(test_df)) {
   fare_med <- median(df$Fare, na.rm = TRUE)
+  test_fare_missing_before <- sum(is.na(test_df$Fare))
   test_df$Fare[is.na(test_df$Fare)] <- fare_med
+  cat(sprintf("\nFilled %d missing Fare values in test set with training median (%.2f).\n", test_fare_missing_before, fare_med))
 }
+
+cat("\nMissing values per column in test set after cleaning:\n")
+print(colSums(is.na(test_df)))
+
+# Convert Sex to numeric: male = 0, female = 1
+cat("\nConverting 'Sex' column to numeric (male = 0, female = 1)\n")
 test_df$Sex <- ifelse(test_df$Sex == "male", 0L, 1L)
 
 # Build the design frame for prediction
 X_test <- test_df[, features, drop = FALSE]
 
-cat("\nPredicting survivability on test set...\n")
+cat("\nPredicting survivability on test set.\n")
 test_prob <- predict(model, newdata = X_test, type = "response")
 test_pred <- ifelse(test_prob >= 0.5, 1L, 0L)
 cat("Predictions complete.\n")
