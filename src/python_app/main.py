@@ -34,10 +34,10 @@ def main():
     print(df.isnull().sum())
 
     # Fill missing ages with median
-    df["Age"].fillna(df["Age"].median(), inplace=True)
+    df["Age"] = df["Age"].fillna(df["Age"].median())
 
     # Fill missing embarked values with mode
-    df["Embarked"].fillna(df["Embarked"].mode()[0], inplace=True)
+    df["Embarked"] = df["Embarked"].fillna(df["Embarked"].mode()[0])
 
     # Feature engineering
     # Convert 'Sex' to numeric
@@ -66,8 +66,8 @@ def main():
     print(test_df.isnull().sum())
 
     # Fill missing ages and fares in test set
-    test_df["Age"].fillna(df["Age"].median(), inplace=True)
-    test_df["Fare"].fillna(df["Fare"].median(), inplace=True)
+    test_df["Age"] = test_df["Age"].fillna(df["Age"].median())
+    test_df["Fare"] = test_df["Fare"].fillna(df["Fare"].median())
     test_df["Sex"] = test_df["Sex"].map({"male": 0, "female": 1})
 
     # Prepare test features
