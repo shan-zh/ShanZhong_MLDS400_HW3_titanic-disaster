@@ -24,7 +24,7 @@ def main():
     print("Loaded training dataset.")
 
     # Basic info
-    print("Basic dataset info:")
+    print("\nBasic dataset info:")
     print(df.info())
     print("\nSummary statistics:")
     print(df.describe(include="all").T.head(10))
@@ -34,13 +34,16 @@ def main():
     print(df.isnull().sum())
 
     # Fill missing ages with median
-    df["Age"].fillna(df["Age"].median(), inplace=True)
+    age_missing_before = df["Age"].isnull().sum()
+    df["Age"] = df["Age"].fillna(df["Age"].median())
+    print(f"\nFilled {age_missing_before} missing Age values with median ({df['Age'].median():.2f}).")
 
-    # Fill missing embarked values with mode
-    df["Embarked"].fillna(df["Embarked"].mode()[0], inplace=True)
+    # Verify no missing values remain in critical column
+    print("\nMissing Age values after cleaning:")
+    print(df['Age'].isnull().sum())
 
-    # Feature engineering
     # Convert 'Sex' to numeric
+    print("\nConverting 'Sex' column to numeric (male = 0, female = 1)")
     df["Sex"] = df["Sex"].map({"male": 0, "female": 1})
 
     # Select features for training
@@ -49,7 +52,7 @@ def main():
     y_train = df["Survived"]
 
     # Build logistic regression model
-    print("\nBuilding Logistic Regression model")
+    print("\nBuilding Logistic Regression model.")
     model = LogisticRegression(max_iter=200)
     model.fit(X_train, y_train)
     print("Model training complete.")
@@ -57,35 +60,48 @@ def main():
     # Measure accuracy on training set
     train_preds = model.predict(X_train)
     train_acc = accuracy_score(y_train, train_preds)
-    print(f"Training set accuracy: {train_acc:.4f}")
+    print(f"\nTraining set accuracy: {train_acc:.4f}")
 
     # Load test data
     test_df = pd.read_csv(test_path)
     print("\nLoaded test dataset.")
-    print("Missing values per column in test set:")
+
+    # Check missing values
+    print("\nMissing values per column in test set:")
     print(test_df.isnull().sum())
 
     # Fill missing ages and fares in test set
-    test_df["Age"].fillna(df["Age"].median(), inplace=True)
-    test_df["Fare"].fillna(df["Fare"].median(), inplace=True)
+    print("\nHandling missing values in test set:")
+    test_df["Age"] = test_df["Age"].fillna(df["Age"].median())
+    test_df["Fare"] = test_df["Fare"].fillna(df["Fare"].median())
+
+    print("Filled missing Age values with training median "
+          f"({df['Age'].median():.2f}) and missing Fare values with training median "
+          f"({df['Fare'].median():.2f}).")
+    print("\nRemaining missing values in test set (should be zero for Age and Fare):")
+    print(test_df.isnull().sum()[["Age", "Fare"]])
+
+    # Convert 'Sex' to numeric
+    print("\nConverting 'Sex' column to numeric (male = 0, female = 1)")
     test_df["Sex"] = test_df["Sex"].map({"male": 0, "female": 1})
 
     # Prepare test features
     X_test = test_df[features]
 
     # Predict on test set
-    print("\nPredicting survivability on test set")
+    print("\nPredicting survivability on test set.")
     test_preds = model.predict(X_test)
     print("Predictions complete.")
 
-    # If test.csv contains 'Survived' column (for checking accuracy)
-    if "Survived" in test_df.columns:
-        y_test = test_df["Survived"]
-        test_acc = accuracy_score(y_test, test_preds)
-        print(f"Test set accuracy: {test_acc:.4f}")
-    else:
-        print("No 'Survived' column in test.csv, skipping test accuracy calculation.")
+    output = pd.DataFrame({
+    "PassengerId": test_df["PassengerId"],
+    "Survived": test_preds
+    })
 
+    # Save the results
+    output_path = "src/data/predictions_python.csv"
+    output.to_csv(output_path, index=False)
+    print(f"\nPredictions saved to {output_path}")
 
 if __name__ == "__main__":
     main()
