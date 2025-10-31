@@ -43,6 +43,7 @@ Do NOT upload the dataset to GitHub. The ```.gitignore``` file already excludes 
 ## Run with Docker — Python implementation
 The Python container reads src/data/train.csv and src/data/test.csv, prints dataset information, handles data cleaning, trains a logistic regression, reports training accuracy, and writes predictions for the test set to a CSV file (```predictions_python.csv```).
 
+**Build and Run (run everything in Terminal)**
 1) Build the Python image  
 ```docker build -t titanic-python:latest -f src/python_app/Dockerfile src/python_app```  
 2) Run the Python container (mount data folder)  
@@ -63,7 +64,7 @@ The Python container runs ```src/python_app/main.py```, which:
 Predicts survivability and saves the output file: ```src/data/predictions_python.csv```
 
 Expected Output (abbreviated):
-```bash
+```
 Loaded training dataset.
 
 Basic dataset info:
@@ -110,6 +111,7 @@ Predictions saved to src/data/predictions_python.csv
 ## Run with Docker — R implementation
 The R container mirrors the same flow: loads train.csv, prints structure/summary, cleans a few fields, fits a logistic regression via glm (binomial), reports training accuracy, loads test.csv, and saves test predictions to predictions_r.csv.
 
+**Build and Run (run everything in Terminal)**
 1) Build the R image  
 ```docker build -t titanic-r:latest -f src/r_app/Dockerfile src/r_app```  
 2) Run the R container (mount data folder)  
@@ -131,7 +133,7 @@ The R container runs ```src/r_app/main.R```, which:
 
 
 Expected Output (abbreviated):
-```bash
+```
 Attaching package: ‘dplyr’
 ...
 
