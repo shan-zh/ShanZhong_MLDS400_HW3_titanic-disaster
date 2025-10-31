@@ -28,7 +28,7 @@ Important note:
 - Local data files train.csv and test.csv in src/data/ (see next section).
 
 ## Quick Start
-Clone this repository (in Terminal)  
+- Clone this repository (in Terminal):  
 ```git clone https://github.com/shan-zh/ShanZhong_MLDS400_HW3_titanic-disaster.git```
 
 ## How to get the data (no data in repo)
